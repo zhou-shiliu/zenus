@@ -190,6 +190,74 @@ body::before {
   color: var(--text-muted);
 }
 
+/* === About === */
+.about {
+  margin-bottom: 2rem;
+}
+
+.about-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  line-height: 1.7;
+}
+
+.about-content p:last-child {
+  margin-bottom: 0;
+}
+
+.about-content strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* === Writing === */
+.writing {
+  margin-bottom: 2rem;
+}
+
+.writing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.writing-item {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.writing-item:hover {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--surface), var(--accent-glow));
+  transform: translateY(-2px);
+}
+
+.writing-meta {
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.writing-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #f5f5f7;
+  margin-bottom: 0.25rem;
+}
+
+.writing-excerpt {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 /* === Footer === */
 .footer {
   text-align: center;
