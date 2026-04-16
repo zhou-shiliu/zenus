@@ -197,10 +197,6 @@ body::before {
   font-size: 0.8rem;
 }
 
-.footer .year::after {
-  content: '2026';
-}
-
 /* === Responsive === */
 @media (max-width: 480px) {
   body {
