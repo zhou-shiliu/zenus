@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zenus — AI 技能树 · 数字分身实验</title>
+  <meta name="description" content="一个开发者的 AI 学习记录与数字分身实验。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #FFFFFF;
+      --bg-subtle:  #F7F7F7;
+      --border:     #E0E0E0;
+      --text:       #1A1A1A;
+      --text-muted: #888888;
+      --accent:     #00D084;
+      --accent-dim: #B8F4D8;
+      --blue:       #00B4D8;
+      --blue-dim:   #D0F0FA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    ::selection { background: var(--accent-dim); color: var(--text); }
+
+    /* grid bg */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 64px 0 48px;
+      border-bottom: 2px solid var(--text);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .hero-text {}
+
+    .site-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .site-title .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 28px;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .tagline span { color: var(--accent); }
+
+    /* pixel cat avatar */
+    .avatar-svg {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+    }
+
+    /* ─── SOCIAL LINKS ─── */
+    .social-links {
+      display: flex;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .social-links a {
+      color: var(--text-muted);
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+    }
+
+    .social-links a:hover { color: var(--text); }
+
+    /* ─── SECTIONS ─── */
+    .section {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '■';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* ─── ABOUT ─── */
+    .about-text p {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-text strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ─── WRITING ─── */
+    .writing-item {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      transition: all 0.15s;
+    }
+
+    .writing-item:hover {
+      border-color: var(--accent);
+      background: var(--bg-subtle);
+    }
+
+    .writing-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .writing-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .writing-excerpt {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── PROJECTS ─── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+
+    .project-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .project-meta.done { color: var(--accent); }
+
+    .project-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .project-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── SKILL TREE TEASER ─── */
+    .skill-tree-teaser {
+      border: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.15s;
+      background: var(--bg);
+    }
+
+    .skill-tree-teaser:hover {
+      border-color: var(--accent);
+      background: var(--bg-subtle);
+    }
+
+    .teaser-left {}
+
+    .teaser-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .teaser-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .teaser-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .teaser-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* corner markers */
+    .pixel-corner-tl, .pixel-corner-br {
+      position: fixed;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--border);
+      pointer-events: none;
+      line-height: 1;
+    }
+    .pixel-corner-tl { top: 16px; left: 16px; }
+    .pixel-corner-br { bottom: 16px; right: 16px; }
+
+    @media (max-width: 560px) {
+      .hero { flex-direction: column; align-items: flex-start; }
+      .site-title { font-size: 28px; }
+      .project-grid { grid-template-columns: 1fr; }
+      .skill-tree-teaser { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="pixel-corner-tl">▲ zenus-c5p.pages.dev</div>
+<div class="pixel-corner-br">■ █ ▪</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1 class="site-title">zenus<span class="cursor"></span></h1>
+      <p class="tagline">AI 学习与数字分身实验 <span>//</span> 持续更新</p>
+    </div>
+    <svg class="avatar-svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="2" width="6" height="2" fill="#1A1A1A"/>
+      <rect x="3" y="4" width="2" height="3" fill="#1A1A1A"/>
+      <rect x="11" y="4" width="2" height="3" fill="#1A1A1A"/>
+      <rect x="4" y="7" width="8" height="6" fill="#1A1A1A"/>
+      <rect x="5" y="8" width="2" height="2" fill="#FFFFFF"/>
+      <rect x="9" y="8" width="2" height="2" fill="#FFFFFF"/>
+      <rect x="7" y="11" width="2" height="1" fill="#1A1A1A"/>
+      <rect x="4" y="13" width="2" height="2" fill="#1A1A1A"/>
+      <rect x="10" y="13" width="2" height="2" fill="#1A1A1A"/>
+      <rect x="5" y="12" width="6" height="1" fill="#00D084"/>
+    </svg>
+  </section>
+
+  <!-- SOCIAL LINKS -->
+  <div class="social-links">
+    <a href="https://github.com/zhou-shiliu" target="_blank" title="GitHub">
+      <svg height="20" width="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+    </a>
+    <a href="https://mp.weixin.qq.com/" target="_blank" title="公众号">
+      <svg height="20" width="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8.69 13.3c.58 0 .88-.29.88-.87V7.5c0-.58-.3-.87-.88-.87-.49 0-.82.24-.97.7h-.03V6.5H9.5v7h1.64v.57c0 .29.02.43.08.57h1.72c-.05-.14-.08-.28-.08-.57v-.57h1.64v-1.1H12.1V8.2c0-.43-.19-.65-.56-.65-.36 0-.56.22-.56.65v4.9c0 .43.19.65.56.65.37 0 .56-.22.56-.65v-.87h-1.69v-.72zm-.02-1.14h1.71v-.86c0-.29-.1-.43-.35-.43-.24 0-.35.14-.35.43v.86zm3.38 1.14h1.64v-7h-1.64v7zm1.64-7.87c-.05.14-.08.29-.08.43v.57h1.64v-.57c0-.14-.02-.29-.08-.43h-1.48zM6.5 9.85c-.43 0-.65.22-.65.65v4.9c0 .43.22.65.65.65.44 0 .66-.22.66-.65V10.5c0-.43-.22-.65-.66-.65zm-.66 6.35c-.36 0-.56.19-.56.43 0 .24.19.43.56.43.36 0 .56-.19.56-.43 0-.24-.19-.43-.56-.43z"/>
+      </svg>
+    </a>
+    <a href="https://x.com/zhouxb5" target="_blank" title="Twitter / X">
+      <svg height="20" width="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    </a>
+    <a href="mailto:zhoushiliu0816@gmail.com" title="Email">
+      <svg height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="M2 7l10 7 10-7"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <div class="section-label">// ABOUT</div>
+    <h2 class="section-title">关于</h2>
+    <div class="about-text">
+      <p>我叫 zenus，全栈 AI 应用开发者。三个月前主动辞职，为追求「相对自由」——不是暴富，是有选择权。</p>
+      <p>程序员，也是修行者。修行让我能觉察情绪而不被裹挟，做决定之前有一个停顿。</p>
+      <p>目前在做的两件事：<strong>桌面宠物应用</strong>（做一个尽可能真实的猫）和<strong>AI 内容探索</strong>（用 AI 延伸自己，替我产出内容）。目标是持续复利，让系统跑，我不在流程里。</p>
+      <p>这是我的真实记录，不给答案，只给过程。</p>
+    </div>
+  </section>
+
+  <!-- WRITING -->
+  <section class="section">
+    <div class="section-label">// WRITING</div>
+    <h2 class="section-title">文章</h2>
+    <a href="https://mp.weixin.qq.com/" target="_blank" class="writing-item">
+      <div class="writing-meta">2026.04 · 公众号</div>
+      <h3 class="writing-title">我想用 AI 建立自己的数字商业</h3>
+      <p class="writing-excerpt">一个失业开发者的真实探索。这是第一篇。</p>
+    </a>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section">
+    <div class="section-label">// PROJECTS</div>
+    <h2 class="section-title">项目</h2>
+    <div class="project-grid">
+      <div class="project-card">
+        <div class="project-meta">In Progress</div>
+        <h3 class="project-name">桌面宠物应用</h3>
+        <p class="project-desc">做一个尽可能真实的猫。信任关系需时间建立，性格随养育方式进化。</p>
+      </div>
+      <div class="project-card">
+        <div class="project-meta">In Progress</div>
+        <h3 class="project-name">数字分身实验</h3>
+        <p class="project-desc">用 AI 延伸自己——信息收集、内容产出、数字身份管理。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILL TREE TEASER -->
+  <section class="section">
+    <div class="section-label">// SKILLS</div>
+    <h2 class="section-title">AI 技能树</h2>
+    <a href="skills.html" class="skill-tree-teaser">
+      <div class="teaser-left">
+        <div class="teaser-label">STAGE 1–6 · 17 NODES</div>
+        <div class="teaser-title">从直觉到前沿的学习路径</div>
+        <div class="teaser-desc">已完成 2/17 · 当前：神经网络基础</div>
+      </div>
+      <div class="teaser-right">
+        查看详情 →
+      </div>
+    </a>
+  </section>
+
+</div>
+
+<footer>
+  <span>■ zenus-c5p.pages.dev</span>
+  <span>// 持续更新中</span>
+</footer>
+
+</body>
+</html>
