@@ -869,16 +869,8 @@
            5. 重复这个过程——百万次、亿次之后，权重逐渐变成了"猫"的特征探测器</p>
         <p>这就是为什么需要<strong>大数据</strong>：神经网络没有明确的规则，它靠统计规律在大量样本中逐渐雕刻出正确的权重分布。</p>
 
-        <h3>直觉总结</h3>
-        <table>
-          <tr><th>概念</th><th>直觉类比</th></tr>
-          <tr><td>神经元</td><td>一个加权投票器</td></tr>
-          <tr><td>层</td><td>逐层抽象的特征提取</td></tr>
-          <tr><td>反向传播</td><td>无数次小修正，从错误中学习</td></tr>
-          <tr><td>Attention</td><td>动态决定"此刻应该关注什么"</td></tr>
-          <tr><td>Transformer</td><td>用 Attention 作为主力，抛弃了序列处理的顺序限制</td></tr>
-          <tr><td>GPT</td><td>超强的"下一个词预测器"</td></tr>
-        </table>
+        <h3>参考资料</h3>
+        <p>· AlphaGo Zero (DeepMind, 2017)：完全从零开始自我对弈，3天训练后以 100:0 击败需要数月人类棋谱的 AlphaGo Lee。<a href="https://doi.org/10.1038/nature24270" target="_blank" style="color:var(--blue);">Nature 论文链接</a></p>
       `
     },
     n2: {
@@ -909,6 +901,9 @@
         <p>- 输入：一段文字<br>
            - 输出：下一个token的概率分布</p>
         <p>GPT 不是"理解"了语言，而是通过海量文本的统计规律，学会了"在这个上下文里，下一个词最可能是什么"。</p>
+
+        <h3>参考资料</h3>
+        <p>· Vaswani et al., "Attention Is All You Need" (Transformer 原始论文, 2017)：首次提出 Transformer 架构。<a href="https://arxiv.org/abs/1706.03762" target="_blank" style="color:var(--blue);">arXiv 链接</a></p>
       `
     },
     n3: {
