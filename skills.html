@@ -3,373 +3,617 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 技能树 — Zenus</title>
-  <meta name="description" content="Zenus 的 AI 学习路径，技能树式呈现。">
-  <link rel="stylesheet" href="style.css">
+  <title>AI 技能树 — zenus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #FFFFFF;
+      --bg-subtle:  #F7F7F7;
+      --border:     #E0E0E0;
+      --text:       #1A1A1A;
+      --text-muted: #888888;
+      --accent:     #00D084;
+      --accent-dim: #B8F4D8;
+      --blue:       #00B4D8;
+      --blue-dim:   #D0F0FA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    ::selection { background: var(--accent-dim); color: var(--text); }
+
+    /* grid bg */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* header */
+    header {
+      padding: 48px 0 32px;
+      border-bottom: 2px solid var(--text);
+    }
+
+    .back-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 24px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .page-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* stats bar */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    .stat {
+      background: var(--bg);
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat.done  .stat-num { color: var(--accent); }
+    .stat.active .stat-num { color: var(--blue); }
+    .stat.locked .stat-num { color: var(--text-muted); }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* section */
+    .section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '■';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* stage */
+    .stage { margin-bottom: 36px; }
+    .stage:last-child { margin-bottom: 0; }
+
+    .stage-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stage-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      letter-spacing: 1px;
+    }
+
+    .stage-num.done  { background: var(--accent); color: #fff; }
+    .stage-num.active{ background: var(--blue); color: #fff; }
+    .stage-num.locked{ background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+
+    .stage-name { font-size: 14px; font-weight: 700; }
+    .stage-meta { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-left: auto; }
+
+    /* nodes grid */
+    .nodes {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    /* node card */
+    .node {
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      padding: 14px 16px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .node:hover {
+      border-color: var(--accent);
+      border-left-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transform: translateY(-1px);
+    }
+
+    .node.done  { border-left-color: var(--accent); }
+    .node.active{
+      border-color: var(--blue);
+      border-left-color: var(--blue);
+      background: var(--blue-dim);
+    }
+    .node.locked { opacity: 0.4; cursor: default; }
+    .node.locked:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border);
+      border-left-color: var(--border);
+    }
+
+    .node-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .node-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .node-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      border: 1px solid currentColor;
+    }
+
+    .node.done   .node-status { color: var(--accent); }
+    .node.active .node-status { color: var(--blue); }
+    .node.locked .node-status { color: var(--text-muted); }
+
+    .node-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--text);
+    }
+
+    .node.done   .progress-fill { background: var(--accent); }
+    .node.active .progress-fill { background: var(--blue); }
+
+    .progress-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    /* expand panel */
+    .node-panel {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .node-panel p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .node-panel a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .node-panel a:hover { text-decoration: underline; }
+
+    .node.open .node-panel { display: block; }
+
+    /* divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 32px 0 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--border);
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* footer */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* corner markers */
+    .pixel-corner-tl, .pixel-corner-br {
+      position: fixed;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--border);
+      pointer-events: none;
+      line-height: 1;
+    }
+    .pixel-corner-tl { top: 16px; left: 16px; }
+    .pixel-corner-br { bottom: 16px; right: 16px; }
+
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .nodes { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <div class="skills-page">
-    <!-- Header -->
-    <div class="skills-header">
-      <a href="index.html" class="back-link">← 回到主页</a>
-      <div class="skills-title-block">
-        <h1 class="skills-title">AI 技能树</h1>
-        <p class="skills-subtitle">点击节点查看文章 · 已解锁节点可展开详情</p>
-      </div>
-      <div class="skills-stats">
-        <div class="stat">
-          <span class="stat-num" id="stat-completed">0</span>
-          <span class="stat-label">已完成</span>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat">
-          <span class="stat-num" id="stat-total">6</span>
-          <span class="stat-label">总阶段</span>
-        </div>
-      </div>
+
+<div class="grid-bg"></div>
+<div class="pixel-corner-tl">▲ zenus-c5p.pages.dev</div>
+<div class="pixel-corner-br">■ █ ▪</div>
+
+<div class="container">
+
+  <header>
+    <a href="/" class="back-link">← back</a>
+    <h1 class="page-title">AI 技能树</h1>
+    <p class="page-subtitle">// STAGE 1–6 · 17 NODES · LEARNING IN PROGRESS</p>
+  </header>
+
+  <!-- stats -->
+  <div class="stats">
+    <div class="stat done">
+      <div class="stat-num">2</div>
+      <div class="stat-label">已完成</div>
     </div>
-
-    <!-- Tree Canvas -->
-    <div class="tree-wrapper" id="tree">
-      <!-- SVG connections drawn by JS -->
-      <svg class="tree-svg" id="tree-svg"></svg>
-
-      <!-- Stage 1 -->
-      <div class="stage-row" id="stage-1">
-        <div class="stage-label">
-          <div class="stage-name">Stage 1</div>
-          <div class="stage-sub">直觉建立</div>
-        </div>
-        <div class="nodes">
-          <div class="node node-root completed" data-stage="1" data-node="intuition">
-            <div class="node-icon">●</div>
-            <div class="node-content">
-              <div class="node-title">AI 与程序的根本区别</div>
-              <div class="node-status completed-label">已完成</div>
-            </div>
-            <div class="node-expand">
-              <div class="node-preview">
-                <p>AI 是一个极其复杂的函数——没人能解释它内部在干什么，它自己从数据里学会了规则。这和传统编程的"人写规则"有本质区别。</p>
-                <div class="node-tags">
-                  <span class="tag tag-arch">神经网络</span>
-                  <span class="tag tag-arch">直觉</span>
-                </div>
-              </div>
-              <a href="https://github.com/zhou-shiliu/ai-learning/blob/main/knowledge/01-neural-network-to-transformer.md" target="_blank" class="node-link">阅读原文 →</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div class="stage-connector">
-        <div class="connector-line active"></div>
-        <div class="connector-dot active"></div>
-      </div>
-
-      <!-- Stage 2 -->
-      <div class="stage-row" id="stage-2">
-        <div class="stage-label">
-          <div class="stage-name">Stage 2</div>
-          <div class="stage-sub">神经网络基础</div>
-        </div>
-        <div class="nodes nodes-grid">
-          <div class="node in-progress" data-stage="2" data-node="neuron">
-            <div class="node-icon">◐</div>
-            <div class="node-content">
-              <div class="node-title">神经元</div>
-              <div class="node-status in-progress-label">进行中</div>
-            </div>
-            <div class="node-expand">
-              <div class="node-preview">
-                <p>单个神经元能做的事非常有限。真正的能力来自层——层层叠加，逐渐从像素提取到边缘、形状、物体。</p>
-              </div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="2" data-node="training">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">训练与反向传播</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="2" data-node="mlp">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">MLP 与激活函数</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div class="stage-connector">
-        <div class="connector-line"></div>
-        <div class="connector-dot"></div>
-      </div>
-
-      <!-- Stage 3 -->
-      <div class="stage-row" id="stage-3">
-        <div class="stage-label">
-          <div class="stage-name">Stage 3</div>
-          <div class="stage-sub">Transformer 与 GPT</div>
-        </div>
-        <div class="nodes nodes-grid">
-          <div class="node locked" data-stage="3" data-node="attention">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">Attention 机制</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="3" data-node="transformer">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">Transformer 架构</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="3" data-node="gpt">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">GPT 工作原理</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div class="stage-connector">
-        <div class="connector-line"></div>
-        <div class="connector-dot"></div>
-      </div>
-
-      <!-- Stage 4 -->
-      <div class="stage-row" id="stage-4">
-        <div class="stage-label">
-          <div class="stage-name">Stage 4</div>
-          <div class="stage-sub">LLM 的能力与边界</div>
-        </div>
-        <div class="nodes nodes-grid">
-          <div class="node locked" data-stage="4" data-node="ic">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">上下文学习</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="4" data-node="cot">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">思维链与推理</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="4" data-node="hallucination">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">幻觉与边界</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div class="stage-connector">
-        <div class="connector-line"></div>
-        <div class="connector-dot"></div>
-      </div>
-
-      <!-- Stage 5 -->
-      <div class="stage-row" id="stage-5">
-        <div class="stage-label">
-          <div class="stage-name">Stage 5</div>
-          <div class="stage-sub">Agent 架构</div>
-        </div>
-        <div class="nodes nodes-grid">
-          <div class="node locked" data-stage="5" data-node="react">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">ReAct 与 Tool Use</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="5" data-node="memory">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">记忆模块</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="5" data-node="multiagent">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">多 Agent 协作</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div class="stage-connector">
-        <div class="connector-line"></div>
-        <div class="connector-dot"></div>
-      </div>
-
-      <!-- Stage 6 -->
-      <div class="stage-row" id="stage-6">
-        <div class="stage-label">
-          <div class="stage-name">Stage 6</div>
-          <div class="stage-sub">前沿与应用</div>
-        </div>
-        <div class="nodes nodes-grid">
-          <div class="node locked" data-stage="6" data-node="multimodal">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">多模态</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="6" data-node="rag">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">Long Context 与 RAG</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-          <div class="node locked" data-stage="6" data-node="safety">
-            <div class="node-icon">◯</div>
-            <div class="node-content">
-              <div class="node-title">AI Safety 基础</div>
-              <div class="node-status locked-label">待解锁</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="stat active">
+      <div class="stat-num">1</div>
+      <div class="stat-label">进行中</div>
     </div>
-
-    <!-- Footer -->
-    <div class="skills-footer">
-      <p>学习是一个渐进过程。每解锁一个节点，就是向前一步。</p>
-      <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank" class="footer-link">查看完整知识库 →</a>
+    <div class="stat locked">
+      <div class="stat-num">14</div>
+      <div class="stat-label">待解锁</div>
+    </div>
+    <div class="stat locked">
+      <div class="stat-num">17</div>
+      <div class="stat-label">总节点</div>
     </div>
   </div>
 
-  <script>
-    // Toggle node expand/collapse
-    document.querySelectorAll('.node:not(.locked) .node-expand').forEach(el => {
-      el.style.display = 'none';
-    });
+  <!-- STAGE 1 -->
+  <div class="section">
+    <div class="section-label">// STAGE 1</div>
+    <h2 class="section-title">直觉建立</h2>
 
-    document.querySelectorAll('.node:not(.locked)').forEach(node => {
-      node.addEventListener('click', () => {
-        const expand = node.querySelector('.node-expand');
-        const wasVisible = expand.style.display === 'block';
-        
-        // Close all
-        document.querySelectorAll('.node:not(.locked) .node-expand').forEach(e => {
-          e.style.display = 'none';
-        });
-        document.querySelectorAll('.node:not(.locked)').forEach(n => {
-          n.classList.remove('expanded');
-        });
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num done">S1</span>
+        <span class="stage-name">直觉建立</span>
+        <span class="stage-meta">3/3 完成</span>
+      </div>
+      <div class="nodes">
+        <div class="node done" onclick="toggle(this)">
+          <div class="node-top">
+            <span class="node-icon">■</span>
+            <span class="node-status">DONE</span>
+          </div>
+          <div class="node-title">神经网络基础概念</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <span class="progress-pct">100%</span>
+          </div>
+          <div class="node-panel">
+            <p>从感知机到多层网络，理解 AI 的基本单元——神经元是如何工作、权重如何调整、梯度如何反向传播。</p>
+            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
+          </div>
+        </div>
 
-        // Toggle this one
-        if (!wasVisible) {
-          expand.style.display = 'block';
-          node.classList.add('expanded');
-        }
-      });
-    });
+        <div class="node done" onclick="toggle(this)">
+          <div class="node-top">
+            <span class="node-icon">■</span>
+            <span class="node-status">DONE</span>
+          </div>
+          <div class="node-title">Transformer 与注意力机制</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <span class="progress-pct">100%</span>
+          </div>
+          <div class="node-panel">
+            <p>注意力机制如何让模型"看懂"上下文—— Query、Key、Value 的本质，注意力分数的计算方式。</p>
+            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
+          </div>
+        </div>
 
-    // Draw SVG connections
-    function drawConnections() {
-      const svg = document.getElementById('tree-svg');
-      const wrapper = document.getElementById('tree');
-      const wrapperRect = wrapper.getBoundingClientRect();
-      
-      svg.innerHTML = '';
-      svg.style.width = wrapper.scrollWidth + 'px';
-      svg.style.height = wrapper.scrollHeight + 'px';
+        <div class="node done" onclick="toggle(this)">
+          <div class="node-top">
+            <span class="node-icon">■</span>
+            <span class="node-status">DONE</span>
+          </div>
+          <div class="node-title">GPT 和语言模型</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            <span class="progress-pct">100%</span>
+          </div>
+          <div class="node-panel">
+            <p>下一个 token 是如何预测出来的—— GPT 的单向注意力、预训练+微调范式、涌现能力从何而来。</p>
+            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      // Connect stage labels to their first nodes
-      document.querySelectorAll('.stage-row').forEach(row => {
-        const label = row.querySelector('.stage-label');
-        const firstNode = row.querySelector('.nodes .node');
-        if (!label || !firstNode) return;
+  <!-- STAGE 2 -->
+  <div class="section">
+    <div class="section-label">// STAGE 2</div>
+    <h2 class="section-title">神经网络基础</h2>
 
-        const lRect = label.getBoundingClientRect();
-        const nRect = firstNode.getBoundingClientRect();
-        const wRect = wrapper.getBoundingClientRect();
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num active">S2</span>
+        <span class="stage-name">神经网络基础</span>
+        <span class="stage-meta">1/4 进行中</span>
+      </div>
+      <div class="nodes">
+        <div class="node active" onclick="toggle(this)">
+          <div class="node-top">
+            <span class="node-icon">▸</span>
+            <span class="node-status">ACTIVE</span>
+          </div>
+          <div class="node-title">AI 如何生成内容</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+            <span class="progress-pct">40%</span>
+          </div>
+          <div class="node-panel">
+            <p>创造 vs 复读——LLM 到底是真的理解语义，还是在做一个极其高级的概率拼接？采样策略、温度、top-p 的作用。</p>
+            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 继续阅读</a>
+          </div>
+        </div>
 
-        const x1 = lRect.right - wrapperRect.left;
-        const y1 = lRect.top + lRect.height / 2 - wrapperRect.top;
-        const x2 = nRect.left - wrapperRect.left;
-        const y2 = nRect.top + nRect.height / 2 - wrapperRect.top;
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">AI 为什么会犯错</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
 
-        const stage = row.id.replace('stage-', '');
-        const isActive = parseInt(stage) <= 2;
-        const color = isActive ? '#a78bfa' : '#2a2a3a';
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">什么是 Token</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
 
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', `M ${x1} ${y1} C ${x1 + 40} ${y1}, ${x2 - 40} ${y2}, ${x2} ${y2}`);
-        path.setAttribute('stroke', color);
-        path.setAttribute('stroke-width', '1.5');
-        path.setAttribute('fill', 'none');
-        path.setAttribute('stroke-dasharray', isActive ? '0' : '4 4');
-        path.setAttribute('opacity', isActive ? '0.6' : '0.3');
-        svg.appendChild(path);
-      });
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">温度与随机性</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      // Connect nodes within grid rows
-      document.querySelectorAll('.nodes-grid').forEach(grid => {
-        const nodes = grid.querySelectorAll('.node:not(.locked)');
-        for (let i = 0; i < nodes.length - 1; i++) {
-          const a = nodes[i].getBoundingClientRect();
-          const b = nodes[i + 1].getBoundingClientRect();
-          const wRect = wrapper.getBoundingClientRect();
+  <!-- STAGE 3 -->
+  <div class="section">
+    <div class="section-label">// STAGE 3</div>
+    <h2 class="section-title">Transformer 进阶</h2>
 
-          const x1 = a.right - wrapperRect.left;
-          const y1 = a.top + a.height / 2 - wrapperRect.top;
-          const x2 = b.left - wrapperRect.left;
-          const y2 = b.top + b.height / 2 - wrapperRect.top;
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num locked">S3</span>
+        <span class="stage-name">Transformer 进阶</span>
+        <span class="stage-meta">0/3 未开始</span>
+      </div>
+      <div class="nodes">
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">注意力矩阵</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">位置编码</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">LLM 训练过程</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', `M ${x1} ${y1} C ${x1 + 30} ${y1}, ${x2 - 30} ${y2}, ${x2} ${y2}`);
-          path.setAttribute('stroke', '#a78bfa');
-          path.setAttribute('stroke-width', '1');
-          path.setAttribute('fill', 'none');
-          path.setAttribute('opacity', '0.4');
-          svg.appendChild(path);
-        }
-      });
-    }
+  <div class="divider">▸ ▸ ▸</div>
 
-    // Animate count up
-    function animateCount(el, target) {
-      let current = 0;
-      const step = Math.ceil(target / 20);
-      const interval = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = current;
-        if (current >= target) clearInterval(interval);
-      }, 40);
-    }
+  <!-- remaining stages summary -->
+  <div class="section">
+    <div class="section-label">// REMAINING</div>
+    <h2 class="section-title">后续阶段</h2>
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        drawConnections();
-        animateCount(document.getElementById('stat-completed'), 1);
-      }, 100);
-    });
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px;">
 
-    window.addEventListener('resize', drawConnections);
-  </script>
+      <div class="node locked">
+        <div class="node-top">
+          <span class="node-icon">·</span>
+          <span class="node-status">STAGE 4</span>
+        </div>
+        <div class="node-title">LLM 的能力与边界</div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">上下文学习 / 思维链 / 幻觉 / 边界探索</div>
+      </div>
+
+      <div class="node locked">
+        <div class="node-top">
+          <span class="node-icon">·</span>
+          <span class="node-status">STAGE 5</span>
+        </div>
+        <div class="node-title">Agent 架构</div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">ReAct / Tool Use / Memory / Planning</div>
+      </div>
+
+      <div class="node locked">
+        <div class="node-top">
+          <span class="node-icon">·</span>
+          <span class="node-status">STAGE 6</span>
+        </div>
+        <div class="node-title">前沿与应用</div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">RAG / Fine-tuning / 部署 / 产品化</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>■ zenus-c5p.pages.dev</span>
+  <span>// 持续更新中</span>
+</footer>
+
+<script>
+  function toggle(el) {
+    // don't toggle locked nodes
+    if (el.classList.contains('locked')) return;
+    el.classList.toggle('open');
+  }
+</script>
+
 </body>
 </html>
