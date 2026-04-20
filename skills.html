@@ -31,7 +31,6 @@
 
     ::selection { background: var(--accent-dim); color: var(--text); }
 
-    /* grid bg */
     .grid-bg {
       position: fixed; inset: 0;
       background-image:
@@ -51,7 +50,133 @@
       z-index: 1;
     }
 
-    /* header */
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,26,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--bg);
+      border: 2px solid var(--text);
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 8px 8px 0 var(--text);
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .modal-close {
+      background: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 8px;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { border-color: var(--text); color: var(--text); }
+
+    .modal-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-body h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 20px 0 8px;
+    }
+    .modal-body h3:first-child { margin-top: 0; }
+
+    .modal-body p {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+
+    .modal-body pre {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+
+    .modal-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 12px 0;
+    }
+
+    .modal-body th, .modal-body td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .modal-body th {
+      background: var(--bg-subtle);
+      font-weight: 600;
+    }
+
+    .modal-body blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: 12px 0;
+    }
+
+    .modal-footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── HEADER ── */
     header {
       padding: 48px 0 32px;
       border-bottom: 2px solid var(--text);
@@ -83,7 +208,7 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* stats bar */
+    /* ── STATS ── */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -119,7 +244,7 @@
       color: var(--text-muted);
     }
 
-    /* section */
+    /* ── SECTION ── */
     .section { padding: 40px 0; border-bottom: 1px solid var(--border); }
     .section:last-child { border-bottom: none; }
 
@@ -147,7 +272,7 @@
       font-size: 10px;
     }
 
-    /* stage */
+    /* ── STAGE ── */
     .stage { margin-bottom: 36px; }
     .stage:last-child { margin-bottom: 0; }
 
@@ -173,14 +298,14 @@
     .stage-name { font-size: 14px; font-weight: 700; }
     .stage-meta { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-left: auto; }
 
-    /* nodes grid */
+    /* ── NODES GRID ── */
     .nodes {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 10px;
     }
 
-    /* node card */
+    /* ── NODE CARD ── */
     .node {
       border: 1px solid var(--border);
       border-left: 3px solid var(--border);
@@ -273,51 +398,31 @@
       text-align: right;
     }
 
-    /* expand panel */
-    .node-panel {
-      display: none;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-    }
-
-    .node-panel p {
-      font-size: 12px;
+    .node-summary {
+      font-size: 11px;
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 8px;
+      margin-top: 8px;
+      line-height: 1.5;
     }
 
-    .node-panel a {
+    .node-read-btn {
+      display: none;
+      margin-top: 8px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 10px;
       color: var(--blue);
-      text-decoration: none;
+      background: none;
+      border: 1px solid var(--blue);
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all 0.15s;
     }
+    .node-read-btn:hover { background: var(--blue-dim); }
 
-    .node-panel a:hover { text-decoration: underline; }
+    .node.done .node-read-btn,
+    .node.active .node-read-btn { display: inline-block; }
 
-    .node.open .node-panel { display: block; }
-
-    /* divider */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 32px 0 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--border);
-    }
-
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* footer */
+    /* ── FOOTER ── */
     footer {
       padding: 32px 0;
       border-top: 1px solid var(--border);
@@ -330,7 +435,6 @@
       align-items: center;
     }
 
-    /* corner markers */
     .pixel-corner-tl, .pixel-corner-br {
       position: fixed;
       font-family: 'JetBrains Mono', monospace;
@@ -353,6 +457,23 @@
 <div class="grid-bg"></div>
 <div class="pixel-corner-tl">▲ zenus-c5p.pages.dev</div>
 <div class="pixel-corner-br">■ █ ▪</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-meta" id="modalMeta"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      STAGE 1 · 直觉建立 · zenus-c5p.pages.dev
+    </div>
+  </div>
+</div>
 
 <div class="container">
 
@@ -394,7 +515,8 @@
         <span class="stage-meta">3/3 完成</span>
       </div>
       <div class="nodes">
-        <div class="node done" onclick="toggle(this)">
+
+        <div class="node done" data-node="n1">
           <div class="node-top">
             <span class="node-icon">■</span>
             <span class="node-status">DONE</span>
@@ -404,13 +526,11 @@
             <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
             <span class="progress-pct">100%</span>
           </div>
-          <div class="node-panel">
-            <p>从感知机到多层网络，理解 AI 的基本单元——神经元是如何工作、权重如何调整、梯度如何反向传播。</p>
-            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
-          </div>
+          <div class="node-summary">从感知机到多层网络，理解 AI 的基本单元——神经元是如何工作、权重如何调整。</div>
+          <button class="node-read-btn" onclick="openModal('n1')">▸ 阅读正文</button>
         </div>
 
-        <div class="node done" onclick="toggle(this)">
+        <div class="node done" data-node="n2">
           <div class="node-top">
             <span class="node-icon">■</span>
             <span class="node-status">DONE</span>
@@ -420,13 +540,11 @@
             <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
             <span class="progress-pct">100%</span>
           </div>
-          <div class="node-panel">
-            <p>注意力机制如何让模型"看懂"上下文—— Query、Key、Value 的本质，注意力分数的计算方式。</p>
-            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
-          </div>
+          <div class="node-summary">注意力机制如何让模型"看懂"上下文——Query、Key、Value 的本质。</div>
+          <button class="node-read-btn" onclick="openModal('n2')">▸ 阅读正文</button>
         </div>
 
-        <div class="node done" onclick="toggle(this)">
+        <div class="node done" data-node="n3">
           <div class="node-top">
             <span class="node-icon">■</span>
             <span class="node-status">DONE</span>
@@ -436,11 +554,10 @@
             <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
             <span class="progress-pct">100%</span>
           </div>
-          <div class="node-panel">
-            <p>下一个 token 是如何预测出来的—— GPT 的单向注意力、预训练+微调范式、涌现能力从何而来。</p>
-            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 阅读原文</a>
-          </div>
+          <div class="node-summary">下一个 token 是如何预测出来的——GPT 的单向注意力、预训练+微调范式。</div>
+          <button class="node-read-btn" onclick="openModal('n3')">▸ 阅读正文</button>
         </div>
+
       </div>
     </div>
   </div>
@@ -457,7 +574,8 @@
         <span class="stage-meta">1/4 进行中</span>
       </div>
       <div class="nodes">
-        <div class="node active" onclick="toggle(this)">
+
+        <div class="node active" data-node="n4">
           <div class="node-top">
             <span class="node-icon">▸</span>
             <span class="node-status">ACTIVE</span>
@@ -467,10 +585,8 @@
             <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
             <span class="progress-pct">40%</span>
           </div>
-          <div class="node-panel">
-            <p>创造 vs 复读——LLM 到底是真的理解语义，还是在做一个极其高级的概率拼接？采样策略、温度、top-p 的作用。</p>
-            <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank">→ 继续阅读</a>
-          </div>
+          <div class="node-summary">创造 vs 复读——LLM 到底是真的理解语义，还是在做一个极其高级的概率拼接？</div>
+          <button class="node-read-btn" onclick="openModal('n4')">▸ 继续阅读</button>
         </div>
 
         <div class="node locked">
@@ -502,12 +618,13 @@
             <span class="node-icon">·</span>
             <span class="node-status">LOCKED</span>
           </div>
-          <div class="node-title">温度与随机性</div>
+          <div class="node-title">模型的边界在哪里</div>
           <div class="progress-row">
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <span class="progress-pct">0%</span>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -515,88 +632,188 @@
   <!-- STAGE 3 -->
   <div class="section">
     <div class="section-label">// STAGE 3</div>
-    <h2 class="section-title">Transformer 进阶</h2>
+    <h2 class="section-title">LLM 能力与边界</h2>
 
     <div class="stage">
       <div class="stage-header">
         <span class="stage-num locked">S3</span>
-        <span class="stage-name">Transformer 进阶</span>
-        <span class="stage-meta">0/3 未开始</span>
+        <span class="stage-name">LLM 能力与边界</span>
+        <span class="stage-meta">0/4 待解锁</span>
       </div>
       <div class="nodes">
+
         <div class="node locked">
           <div class="node-top">
             <span class="node-icon">·</span>
             <span class="node-status">LOCKED</span>
           </div>
-          <div class="node-title">注意力矩阵</div>
+          <div class="node-title">提示词工程</div>
           <div class="progress-row">
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <span class="progress-pct">0%</span>
           </div>
         </div>
+
         <div class="node locked">
           <div class="node-top">
             <span class="node-icon">·</span>
             <span class="node-status">LOCKED</span>
           </div>
-          <div class="node-title">位置编码</div>
+          <div class="node-title">Function Calling 与工具使用</div>
           <div class="progress-row">
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <span class="progress-pct">0%</span>
           </div>
         </div>
+
         <div class="node locked">
           <div class="node-top">
             <span class="node-icon">·</span>
             <span class="node-status">LOCKED</span>
           </div>
-          <div class="node-title">LLM 训练过程</div>
+          <div class="node-title">RAG 与外部知识</div>
           <div class="progress-row">
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <span class="progress-pct">0%</span>
           </div>
         </div>
+
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">长上下文与记忆</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <div class="divider">▸ ▸ ▸</div>
-
-  <!-- remaining stages summary -->
+  <!-- STAGE 4 -->
   <div class="section">
-    <div class="section-label">// REMAINING</div>
-    <h2 class="section-title">后续阶段</h2>
+    <div class="section-label">// STAGE 4</div>
+    <h2 class="section-title">Agent 架构</h2>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px;">
-
-      <div class="node locked">
-        <div class="node-top">
-          <span class="node-icon">·</span>
-          <span class="node-status">STAGE 4</span>
-        </div>
-        <div class="node-title">LLM 的能力与边界</div>
-        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">上下文学习 / 思维链 / 幻觉 / 边界探索</div>
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num locked">S4</span>
+        <span class="stage-name">Agent 架构</span>
+        <span class="stage-meta">0/3 待解锁</span>
       </div>
+      <div class="nodes">
 
-      <div class="node locked">
-        <div class="node-top">
-          <span class="node-icon">·</span>
-          <span class="node-status">STAGE 5</span>
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">ReAct 与规划能力</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
         </div>
-        <div class="node-title">Agent 架构</div>
-        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">ReAct / Tool Use / Memory / Planning</div>
-      </div>
 
-      <div class="node locked">
-        <div class="node-top">
-          <span class="node-icon">·</span>
-          <span class="node-status">STAGE 6</span>
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">多 Agent 协作</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
         </div>
-        <div class="node-title">前沿与应用</div>
-        <div style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">RAG / Fine-tuning / 部署 / 产品化</div>
-      </div>
 
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">Agent 记忆系统</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="section">
+    <div class="section-label">// STAGE 5</div>
+    <h2 class="section-title">Autonomous AI</h2>
+
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num locked">S5</span>
+        <span class="stage-name">Autonomous AI</span>
+        <span class="stage-meta">0/2 待解锁</span>
+      </div>
+      <div class="nodes">
+
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">数字分身设计</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">持续学习与自优化</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 6 -->
+  <div class="section">
+    <div class="section-label">// STAGE 6</div>
+    <h2 class="section-title">前沿与应用</h2>
+
+    <div class="stage">
+      <div class="stage-header">
+        <span class="stage-num locked">S6</span>
+        <span class="stage-name">前沿与应用</span>
+        <span class="stage-meta">0/1 待解锁</span>
+      </div>
+      <div class="nodes">
+
+        <div class="node locked">
+          <div class="node-top">
+            <span class="node-icon">·</span>
+            <span class="node-status">LOCKED</span>
+          </div>
+          <div class="node-title">当前 AI 发展现状</div>
+          <div class="progress-row">
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <span class="progress-pct">0%</span>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -608,11 +825,162 @@
 </footer>
 
 <script>
-  function toggle(el) {
-    // don't toggle locked nodes
-    if (el.classList.contains('locked')) return;
-    el.classList.toggle('open');
+  const ARTICLES = {
+    n1: {
+      title: '神经网络基础概念',
+      meta: 'STAGE 1 · 神经元 / 层 / 反向传播 · 2026-04-20',
+      content: `
+        <h3>核心问题</h3>
+        <p><strong>AI（神经网络）和传统程序，到底有什么区别？</strong></p>
+        <p>传统程序：人写规则 → 计算机执行 → 输出确定结果</p>
+        <p>神经网络：人给数据 + 答案 → 计算机自己找规则 → 输出（可能是）对的答案</p>
+        <p>这是本质上的转变：从"告诉它怎么做"到"让它自己学出来"。</p>
+
+        <h3>1. 神经元：信息的基本单元</h3>
+        <p>想象一个小型决策器。</p>
+        <p>它收到几个数字（输入），每个数字乘以一个权重，然后把所有结果加起来，最后过一个激活函数（比如 ReLU：如果是负数就变成0，是正数就保留原值）。</p>
+        <p>这就是一个神经元干的事：<strong>加权求和 → 激活 → 输出</strong></p>
+        <pre>输入1(x1) --权重w1--> \\
+                      }→ (w1×x1 + w2×x2 + b) → 激活函数 → 输出
+输入2(x2) --权重w2--> /
+偏置 b（让决策边界可以平移）</pre>
+        <p>例子：判断一张图片是不是猫</p>
+        <p>- 输入：每个像素的灰度值（比如 64×64 = 4096 个数字）<br>
+           - 神经元做的事情：给每个像素配一个"猫特征权重"——有胡须轮廓的地方权重高，背景的地方权重低<br>
+           - 输出：数字越大，越可能是猫</p>
+
+        <h3>2. 层：神经元的排列方式</h3>
+        <p>单个神经元能做的决策非常有限。真正的能力来自<strong>层</strong>。</p>
+        <p>- <strong>输入层</strong>：接收原始数据（像素、文本token等）<br>
+           - <strong>隐藏层</strong>：层层处理，每一层都在把原始数据转换成更高层次的理解<br>
+           - 第一层：识别边缘和纹理<br>
+           - 第二层：识别形状<br>
+           - 第三层：识别眼睛、耳朵、尾巴<br>
+           - <strong>输出层</strong>：给出最终判断（是猫 / 不是猫）</p>
+        <p>"层"这个概念对应了神经网络的<strong>深度</strong>——层数越多，能捕捉的特征就越抽象、越复杂。</p>
+
+        <h3>3. 神经网络：如何找到正确的权重</h3>
+        <p>初始状态：所有权重都是随机的（就像闭眼乱猜）</p>
+        <p><strong>训练过程（反向传播 + 梯度下降）：</strong></p>
+        <p>1. 送进去一张猫的图片，得到一个输出（比如 0.3，表示"不太像猫"）<br>
+           2. 计算错误：正确答案应该是 1（100%是猫），输出是 0.3，差了 0.7<br>
+           3. 反向传播：这个错误信号会一层层往回走，问每一层"你该为这个错误付多少责任"<br>
+           4. 调整权重：每个权重都稍微移动一点，让错误变小一点<br>
+           5. 重复这个过程——百万次、亿次之后，权重逐渐变成了"猫"的特征探测器</p>
+        <p>这就是为什么需要<strong>大数据</strong>：神经网络没有明确的规则，它靠统计规律在大量样本中逐渐雕刻出正确的权重分布。</p>
+
+        <h3>直觉总结</h3>
+        <table>
+          <tr><th>概念</th><th>直觉类比</th></tr>
+          <tr><td>神经元</td><td>一个加权投票器</td></tr>
+          <tr><td>层</td><td>逐层抽象的特征提取</td></tr>
+          <tr><td>反向传播</td><td>无数次小修正，从错误中学习</td></tr>
+          <tr><td>Attention</td><td>动态决定"此刻应该关注什么"</td></tr>
+          <tr><td>Transformer</td><td>用 Attention 作为主力，抛弃了序列处理的顺序限制</td></tr>
+          <tr><td>GPT</td><td>超强的"下一个词预测器"</td></tr>
+        </table>
+      `
+    },
+    n2: {
+      title: 'Transformer 与注意力机制',
+      meta: 'STAGE 1 · Attention · Query Key Value · 2026-04-20',
+      content: `
+        <h3>Attention：让神经网络学会关注什么</h3>
+        <p>传统神经网络处理序列（一句一句话）时，是一个字一个往后读的，经常忘记前面说了什么。</p>
+        <p><strong>Attention（注意力机制）做了件事：在任何位置做预测时，都可以回头看序列中的任意其他位置，并判断"我应该关注哪几个字"。</strong></p>
+        <p>例子：翻译 "The cat sat on the mat"</p>
+        <p>- 翻译到 "cat" 时，Attention 给 "cat" 很高的权重<br>
+           - 翻译到 "sat" 时，Attention 同时关注 "cat" 和 "sat"（因为猫才会坐）<br>
+           - 翻译到 "mat" 时，Attention 注意到 "on the"，知道这是在说"在……上面"</p>
+        <p>Attention 让模型能够捕捉长距离的语义依赖，而不用管它们之间隔了多远。</p>
+
+        <h3>Query、Key、Value 的本质</h3>
+        <p>每个 token 都有三个向量：</p>
+        <p>- <strong>Query（查询）</strong>：我在找什么信息？<br>
+           - <strong>Key（键）</strong>：我包含了什么信息？<br>
+           - <strong>Value（值）</strong>：如果匹配成功，我提供什么内容？</p>
+        <p>Attention 分数 = Query 和 Key 的相似度（点积）→ 归一化 → 加权求和 Value</p>
+        <p>类比：你在图书馆找书，Query 是你的问题，Key 是每本书的目录摘要，Value 是书的正文。系统用问题与目录的匹配程度，决定哪本书的内容对你最有价值。</p>
+
+        <h3>Transformer：把 Attention 用到极致</h3>
+        <p><strong>Transformer = 多层 Attention 的堆叠 + 残差连接 + LayerNorm + FFN</strong></p>
+        <p>关键洞见：<strong>只要注意力机制足够强，单靠它就能完成语言理解的大部分工作。</strong></p>
+        <p>GPT 就是这个架构的产物：</p>
+        <p>- 输入：一段文字<br>
+           - 输出：下一个token的概率分布</p>
+        <p>GPT 不是"理解"了语言，而是通过海量文本的统计规律，学会了"在这个上下文里，下一个词最可能是什么"。</p>
+      `
+    },
+    n3: {
+      title: 'GPT 和语言模型',
+      meta: 'STAGE 1 · Next Token Prediction · 预训练与微调 · 2026-04-20',
+      content: `
+        <h3>下一个 token 是如何预测出来的</h3>
+        <p>GPT 的核心任务其实很简单：<strong>给定一段文字，预测下一个最可能出现的词。</strong></p>
+        <p>这不是"理解"，而是一个超级强大的统计游戏：</p>
+        <p>GPT 在训练时看过海量文本，它知道在"我想去喝一杯"之后，后面更可能跟着"咖啡"而不是"挖掘机"。这种统计规律被编码在成百亿个权重里。</p>
+
+        <h3>单向注意力的设计</h3>
+        <p>GPT 使用的是<strong>单向（Masked）注意力</strong>——预测第 N 个 token 时，只能看到第 1 到第 N-1 个 token，不能偷看后面的内容。</p>
+        <p>这和 BERT（双向）不同，GPT 的设计目标很明确：<strong>做生成</strong>，而理解任务可以交给其他架构。</p>
+
+        <h3>预训练 + 微调范式</h3>
+        <p><strong>预训练（Pre-training）</strong>：在海量通用文本上训练，让模型学会语言规律、世界知识、常识推理。成本极高，需要数千 GPU 运行数周。</p>
+        <p><strong>微调（Fine-tuning）</strong>：在特定任务数据上继续训练，调整权重让模型更擅长某种能力（如对话、代码生成）。成本相对低。</p>
+
+        <h3>涌现能力</h3>
+        <p>当模型规模超过某个临界点时，某些能力会突然出现——在较小的模型上完全看不到，在大模型上却表现良好。</p>
+        <p>这说明：<strong>规模不只是让现有能力更强，它真的会解锁全新的能力。</strong></p>
+      `
+    },
+    n4: {
+      title: 'AI 如何生成内容',
+      meta: 'STAGE 2 · 生成式 AI · 采样策略 · 2026-04 待完成',
+      content: `
+        <h3>核心问题</h3>
+        <p><strong>LLM 到底是真的理解语义，还是在做一个极其高级的概率拼接？</strong></p>
+
+        <h3>创造 vs 复读</h3>
+        <p>从结果上看，LLM 的输出确实是"新的"——它不是在复制训练数据中的某个完整句子。但从过程上看，它的工作方式本质上还是<strong>概率拼接</strong>，只是这个概率模型足够复杂，复杂到能捕捉语义层面的规律，而不只是字面共现。</p>
+        <blockquote>这不是"理解"，但这个"不理解"已经足够好用了。</blockquote>
+
+        <h3>采样策略：决定输出的随机性</h3>
+        <p>模型输出的是下一个 token 的概率分布。要从概率分布中选出一个 token，有几种常见策略：</p>
+        <p>- <strong>Greedy（贪婪）</strong>：始终选概率最高的 token。确定性强，但容易陷入重复循环。</p>
+        <p>- <strong>Temperature</strong>：调整概率分布的平滑度。Temperature=1 保持原始分布；Temperature→0 趋近贪婪；Temperature>1 让分布更平坦，输出更随机。</p>
+        <p>- <strong>Top-p（核采样）</strong>：从概率最高的 p 比例 token 中随机选择。例如 top-p=0.9 表示从累计概率达到 90% 的最小 token 集合中采样，兼顾多样性和质量。</p>
+
+        <h3>（内容待续）</h3>
+        <p>这部分还在学习推进中。计划涵盖：</p>
+        <p>- 幻觉问题：LLM 为何会"一本正经地胡说八道"<br>
+           - 温度与创造力的关系<br>
+           - 多步生成的误差累积问题</p>
+      `
+    }
+  };
+
+  function openModal(nodeId) {
+    const article = ARTICLES[nodeId];
+    if (!article) return;
+    document.getElementById('modalTitle').textContent = article.title;
+    document.getElementById('modalMeta').textContent = article.meta;
+    document.getElementById('modalBody').innerHTML = article.content;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
 </script>
 
 </body>
