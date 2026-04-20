@@ -211,6 +211,146 @@ body::before {
   font-weight: 500;
 }
 
+/* === Reading / Knowledge Tree === */
+.reading {
+  margin-bottom: 2rem;
+}
+
+.reading-intro {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-family: var(--font-serif);
+}
+
+.knowledge-category {
+  margin-bottom: 1.5rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.category-icon {
+  font-size: 0.9rem;
+}
+
+.category-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.knowledge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.knowledge-item {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.knowledge-item:hover {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--surface), var(--accent-glow));
+  transform: translateY(-1px);
+}
+
+.knowledge-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.knowledge-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #f5f5f7;
+  margin-bottom: 0.35rem;
+  line-height: 1.4;
+}
+
+.knowledge-summary {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-family: var(--font-serif);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tag pills */
+.tag {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tag-model {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+}
+
+.tag-arch {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.tag-tool {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.tag-oss {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.tag-policy {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.reading-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.reading-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.reading-footer a:hover {
+  text-decoration: underline;
+}
+
 /* === Writing === */
 .writing {
   margin-bottom: 2rem;
