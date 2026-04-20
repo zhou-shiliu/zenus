@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 技能树 — Zenus</title>
+  <meta name="description" content="Zenus 的 AI 学习路径，技能树式呈现。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="skills-page">
+    <!-- Header -->
+    <div class="skills-header">
+      <a href="index.html" class="back-link">← 回到主页</a>
+      <div class="skills-title-block">
+        <h1 class="skills-title">AI 技能树</h1>
+        <p class="skills-subtitle">点击节点查看文章 · 已解锁节点可展开详情</p>
+      </div>
+      <div class="skills-stats">
+        <div class="stat">
+          <span class="stat-num" id="stat-completed">0</span>
+          <span class="stat-label">已完成</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+          <span class="stat-num" id="stat-total">6</span>
+          <span class="stat-label">总阶段</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tree Canvas -->
+    <div class="tree-wrapper" id="tree">
+      <!-- SVG connections drawn by JS -->
+      <svg class="tree-svg" id="tree-svg"></svg>
+
+      <!-- Stage 1 -->
+      <div class="stage-row" id="stage-1">
+        <div class="stage-label">
+          <div class="stage-name">Stage 1</div>
+          <div class="stage-sub">直觉建立</div>
+        </div>
+        <div class="nodes">
+          <div class="node node-root completed" data-stage="1" data-node="intuition">
+            <div class="node-icon">●</div>
+            <div class="node-content">
+              <div class="node-title">AI 与程序的根本区别</div>
+              <div class="node-status completed-label">已完成</div>
+            </div>
+            <div class="node-expand">
+              <div class="node-preview">
+                <p>AI 是一个极其复杂的函数——没人能解释它内部在干什么，它自己从数据里学会了规则。这和传统编程的"人写规则"有本质区别。</p>
+                <div class="node-tags">
+                  <span class="tag tag-arch">神经网络</span>
+                  <span class="tag tag-arch">直觉</span>
+                </div>
+              </div>
+              <a href="https://github.com/zhou-shiliu/ai-learning/blob/main/knowledge/01-neural-network-to-transformer.md" target="_blank" class="node-link">阅读原文 →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="stage-connector">
+        <div class="connector-line active"></div>
+        <div class="connector-dot active"></div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage-row" id="stage-2">
+        <div class="stage-label">
+          <div class="stage-name">Stage 2</div>
+          <div class="stage-sub">神经网络基础</div>
+        </div>
+        <div class="nodes nodes-grid">
+          <div class="node in-progress" data-stage="2" data-node="neuron">
+            <div class="node-icon">◐</div>
+            <div class="node-content">
+              <div class="node-title">神经元</div>
+              <div class="node-status in-progress-label">进行中</div>
+            </div>
+            <div class="node-expand">
+              <div class="node-preview">
+                <p>单个神经元能做的事非常有限。真正的能力来自层——层层叠加，逐渐从像素提取到边缘、形状、物体。</p>
+              </div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="2" data-node="training">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">训练与反向传播</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="2" data-node="mlp">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">MLP 与激活函数</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="stage-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="stage-row" id="stage-3">
+        <div class="stage-label">
+          <div class="stage-name">Stage 3</div>
+          <div class="stage-sub">Transformer 与 GPT</div>
+        </div>
+        <div class="nodes nodes-grid">
+          <div class="node locked" data-stage="3" data-node="attention">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">Attention 机制</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="3" data-node="transformer">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">Transformer 架构</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="3" data-node="gpt">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">GPT 工作原理</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="stage-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="stage-row" id="stage-4">
+        <div class="stage-label">
+          <div class="stage-name">Stage 4</div>
+          <div class="stage-sub">LLM 的能力与边界</div>
+        </div>
+        <div class="nodes nodes-grid">
+          <div class="node locked" data-stage="4" data-node="ic">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">上下文学习</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="4" data-node="cot">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">思维链与推理</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="4" data-node="hallucination">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">幻觉与边界</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="stage-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="stage-row" id="stage-5">
+        <div class="stage-label">
+          <div class="stage-name">Stage 5</div>
+          <div class="stage-sub">Agent 架构</div>
+        </div>
+        <div class="nodes nodes-grid">
+          <div class="node locked" data-stage="5" data-node="react">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">ReAct 与 Tool Use</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="5" data-node="memory">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">记忆模块</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="5" data-node="multiagent">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">多 Agent 协作</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div class="stage-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <!-- Stage 6 -->
+      <div class="stage-row" id="stage-6">
+        <div class="stage-label">
+          <div class="stage-name">Stage 6</div>
+          <div class="stage-sub">前沿与应用</div>
+        </div>
+        <div class="nodes nodes-grid">
+          <div class="node locked" data-stage="6" data-node="multimodal">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">多模态</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="6" data-node="rag">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">Long Context 与 RAG</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+          <div class="node locked" data-stage="6" data-node="safety">
+            <div class="node-icon">◯</div>
+            <div class="node-content">
+              <div class="node-title">AI Safety 基础</div>
+              <div class="node-status locked-label">待解锁</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="skills-footer">
+      <p>学习是一个渐进过程。每解锁一个节点，就是向前一步。</p>
+      <a href="https://github.com/zhou-shiliu/ai-learning" target="_blank" class="footer-link">查看完整知识库 →</a>
+    </div>
+  </div>
+
+  <script>
+    // Toggle node expand/collapse
+    document.querySelectorAll('.node:not(.locked) .node-expand').forEach(el => {
+      el.style.display = 'none';
+    });
+
+    document.querySelectorAll('.node:not(.locked)').forEach(node => {
+      node.addEventListener('click', () => {
+        const expand = node.querySelector('.node-expand');
+        const wasVisible = expand.style.display === 'block';
+        
+        // Close all
+        document.querySelectorAll('.node:not(.locked) .node-expand').forEach(e => {
+          e.style.display = 'none';
+        });
+        document.querySelectorAll('.node:not(.locked)').forEach(n => {
+          n.classList.remove('expanded');
+        });
+
+        // Toggle this one
+        if (!wasVisible) {
+          expand.style.display = 'block';
+          node.classList.add('expanded');
+        }
+      });
+    });
+
+    // Draw SVG connections
+    function drawConnections() {
+      const svg = document.getElementById('tree-svg');
+      const wrapper = document.getElementById('tree');
+      const wrapperRect = wrapper.getBoundingClientRect();
+      
+      svg.innerHTML = '';
+      svg.style.width = wrapper.scrollWidth + 'px';
+      svg.style.height = wrapper.scrollHeight + 'px';
+
+      // Connect stage labels to their first nodes
+      document.querySelectorAll('.stage-row').forEach(row => {
+        const label = row.querySelector('.stage-label');
+        const firstNode = row.querySelector('.nodes .node');
+        if (!label || !firstNode) return;
+
+        const lRect = label.getBoundingClientRect();
+        const nRect = firstNode.getBoundingClientRect();
+        const wRect = wrapper.getBoundingClientRect();
+
+        const x1 = lRect.right - wrapperRect.left;
+        const y1 = lRect.top + lRect.height / 2 - wrapperRect.top;
+        const x2 = nRect.left - wrapperRect.left;
+        const y2 = nRect.top + nRect.height / 2 - wrapperRect.top;
+
+        const stage = row.id.replace('stage-', '');
+        const isActive = parseInt(stage) <= 2;
+        const color = isActive ? '#a78bfa' : '#2a2a3a';
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1 + 40} ${y1}, ${x2 - 40} ${y2}, ${x2} ${y2}`);
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', '1.5');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-dasharray', isActive ? '0' : '4 4');
+        path.setAttribute('opacity', isActive ? '0.6' : '0.3');
+        svg.appendChild(path);
+      });
+
+      // Connect nodes within grid rows
+      document.querySelectorAll('.nodes-grid').forEach(grid => {
+        const nodes = grid.querySelectorAll('.node:not(.locked)');
+        for (let i = 0; i < nodes.length - 1; i++) {
+          const a = nodes[i].getBoundingClientRect();
+          const b = nodes[i + 1].getBoundingClientRect();
+          const wRect = wrapper.getBoundingClientRect();
+
+          const x1 = a.right - wrapperRect.left;
+          const y1 = a.top + a.height / 2 - wrapperRect.top;
+          const x2 = b.left - wrapperRect.left;
+          const y2 = b.top + b.height / 2 - wrapperRect.top;
+
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', `M ${x1} ${y1} C ${x1 + 30} ${y1}, ${x2 - 30} ${y2}, ${x2} ${y2}`);
+          path.setAttribute('stroke', '#a78bfa');
+          path.setAttribute('stroke-width', '1');
+          path.setAttribute('fill', 'none');
+          path.setAttribute('opacity', '0.4');
+          svg.appendChild(path);
+        }
+      });
+    }
+
+    // Animate count up
+    function animateCount(el, target) {
+      let current = 0;
+      const step = Math.ceil(target / 20);
+      const interval = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(interval);
+      }, 40);
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        drawConnections();
+        animateCount(document.getElementById('stat-completed'), 1);
+      }, 100);
+    });
+
+    window.addEventListener('resize', drawConnections);
+  </script>
+</body>
+</html>
