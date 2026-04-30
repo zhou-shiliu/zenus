@@ -319,6 +319,94 @@
       line-height: 1.6;
     }
 
+    .video-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .video-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+    }
+
+    .step-item {
+      border: 1px dashed var(--border);
+      padding: 10px;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .step-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .step-text {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .video-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .video-item {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.86);
+      padding: 12px;
+    }
+
+    .video-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .video-item-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .video-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .text-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .text-link:hover { text-decoration: underline; }
+
+    .empty-note {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
     footer {
       padding: 32px 0;
       border-top: 1px solid var(--border);
@@ -453,6 +541,52 @@
   </section>
 
   <section class="section">
+    <div class="section-label">// ENGLISH LAYERS</div>
+    <h2 class="section-title">英语双轨入口</h2>
+    <div class="video-panel">
+      <div class="card card-accent">
+        <div class="card-meta">Technical English</div>
+        <div class="card-title" id="recommendedVideoTitle">Neural Networks Explained</div>
+        <p class="card-desc" id="recommendedVideoTask">Day 4 · 听力 Fireship；写作：描述今天的工作</p>
+        <p class="hint" id="technicalEnglishTheme">Today Theme · 多元线性回归</p>
+        <p class="hint" id="technicalEnglishWhy">Why this video · It is close enough to today's topic without making the English side too heavy.</p>
+        <p class="hint" id="technicalEnglishShadowingVideo">Shadowing Video · 当前推荐视频</p>
+        <p class="hint" id="technicalEnglishShadowingMode">Shadowing Mode · 在浏览器里打开视频 + 字幕 / Language Reactor</p>
+        <p class="hint" id="technicalEnglishShadow">Shadowing · Today I learned how this concept fits into the bigger system.</p>
+        <p class="hint" id="technicalEnglishOutput">Output · Use 2 English sentences to explain today's concept in your own words.</p>
+        <div class="video-links">
+          <a id="recommendedVideoLink" class="button-link" href="https://www.youtube.com/watch?v=oJ7uOj2LRso" target="_blank" rel="noreferrer">打开推荐视频</a>
+          <a id="recommendedYoutubeSearch" class="button-link secondary" href="https://www.youtube.com/results?search_query=Neural+Networks+Explained+Fireship" target="_blank" rel="noreferrer">YouTube 搜索</a>
+        </div>
+        <ul class="step-list" id="technicalEnglishSteps">
+          <li class="step-item"><div class="step-label">Warm-up</div><div class="step-text">先看 1-2 分钟，进入主题。</div></li>
+          <li class="step-item"><div class="step-label">Shadowing</div><div class="step-text">打开字幕，跟读 1 句，重复 3 遍。</div></li>
+          <li class="step-item"><div class="step-label">Output</div><div class="step-text">用 2 句英文解释今天主题。</div></li>
+        </ul>
+      </div>
+      <div class="card card-blue">
+        <div class="card-meta">Daily Speaking</div>
+        <div class="card-title" id="dailySpeakingTitle">低压恢复开口</div>
+        <p class="card-desc" id="dailySpeakingPrompt">What did you learn recently, even if only a little?</p>
+        <ul class="task-list" id="dailySpeakingTasks">
+          <li>开口 30 秒，不追求完整，只说出 2-3 句。</li>
+          <li>先恢复开口感，别让英语只停留在输入。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div class="card-meta">Recent History</div>
+        <ul class="video-list" id="recentVideoList">
+          <li class="video-item">
+            <div class="video-item-title">What happens when you type a URL</div>
+            <div class="video-item-meta">2026-04-22 · ByteByteGo</div>
+            <div class="video-links"><a class="text-link" href="https://www.youtube.com/watch?v=AlkDbnbv7dk" target="_blank" rel="noreferrer">打开</a></div>
+          </li>
+        </ul>
+</div>
+  </section>
+
+  <section class="section">
     <div class="section-label">// FEEDBACK</div>
     <h2 class="section-title">今日学习反馈</h2>
     <form id="feedbackForm">
@@ -545,10 +679,70 @@
     return `## ${data.track} Learning Log（${data.date}）\n\n**完成模式**：${data.mode || '-'}\n\n**完成内容**：\n${data.done || '-'}\n\n## 顶层思维复盘\n\n**1. 层级定位**：\n${data.level || '-'}\n\n**2. 核心问题**：\n${data.problem || '-'}\n\n**3. 横向连接**：\n${data.connections || '-'}\n\n**4. 结构沉淀**：\n${data.structure || '-'}\n\n**5. 最终判断：我是在堆东西，还是在建结构？**\n${data.judgement || '-'}\n\n**下一步**：\n${data.next || '-'}\n`;
   }
 
+  function renderRecentVideos(videos) {
+    const list = document.getElementById('recentVideoList');
+    if (!list) return;
+    if (!Array.isArray(videos) || videos.length === 0) {
+      list.innerHTML = '<li class="empty-note">还没有可展示的历史视频记录。</li>';
+      return;
+    }
+    list.innerHTML = videos.map(video => {
+      const links = [];
+      if (video.url) {
+        links.push(`<a class="text-link" href="${video.url}" target="_blank" rel="noreferrer">打开</a>`);
+      }
+      links.push(`<a class="text-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(video.title || '')}" target="_blank" rel="noreferrer">搜索</a>`);
+      return `<li class="video-item"><div class="video-item-title">${video.title || '未命名视频'}</div><div class="video-item-meta">${video.date || '未知日期'}${video.source ? ` · ${video.source}` : ''}</div><div class="video-links">${links.join('')}</div></li>`;
+    }).join('');
+  }
+
+  function renderDailySpeaking(data) {
+    if (!data) return;
+    document.getElementById('dailySpeakingTitle').textContent = data.title || 'Daily Speaking';
+    document.getElementById('dailySpeakingPrompt').textContent = data.prompt || '';
+    const tasks = [data.task, data.goal].filter(Boolean);
+    document.getElementById('dailySpeakingTasks').innerHTML = tasks.map(x => `<li>${x}</li>`).join('');
+  }
+
+  function renderTechnicalEnglishSteps(steps) {
+    const list = document.getElementById('technicalEnglishSteps');
+    if (!list) return;
+    if (!Array.isArray(steps) || steps.length === 0) {
+      list.innerHTML = '';
+      return;
+    }
+    list.innerHTML = steps.map(step => `<li class="step-item"><div class="step-label">${step.label || 'Step'}</div><div class="step-text">${step.instruction || ''}</div></li>`).join('');
+  }
+
+  function renderRecommendedVideo(video) {
+    if (!video) return;
+    document.getElementById('recommendedVideoTitle').textContent = video.title || '继续当前英语任务';
+    const taskLabel = video.task_label || 'Current Task';
+    document.getElementById('recommendedVideoTask').textContent = `${taskLabel} · ${video.task || '按计划继续'}`;
+    const openLink = document.getElementById('recommendedVideoLink');
+    const searchLink = document.getElementById('recommendedYoutubeSearch');
+    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent((video.title || '') + ' ' + (video.source || '') + ' ' + (video.task || ''))}`;
+    searchLink.href = searchUrl;
+    searchLink.textContent = video.next_up && video.next_up.title ? `下一条：${video.next_up.title}` : 'YouTube 搜索';
+    if (video.next_up && video.next_up.url) {
+      searchLink.href = video.next_up.url;
+    }
+    if (video.url) {
+      openLink.href = video.url;
+      openLink.textContent = video.strategy && video.strategy.includes('recovery') ? '打开恢复视频' : '打开推荐视频';
+      openLink.style.display = 'inline-block';
+    } else {
+      openLink.href = searchUrl;
+      openLink.textContent = '打开搜索结果';
+      openLink.style.display = 'inline-block';
+    }
+  }
+
   function renderState(state) {
     if (!state) return;
     const en = state.english || {};
     const task = en.current_task || {};
+    const tech = en.technical_english || {};
     document.getElementById('englishTaskMeta').textContent = `English · ${task.kind || 'current'}`;
     document.getElementById('englishTaskTitle').textContent = task.title || '继续下一项任务';
     document.getElementById('englishTaskDesc').textContent = `最后记录：${en.last_log_date || '暂无'} · 已完成 ${en.completed_sessions || 0}/${en.target_sessions || 60} Session${en.interruption_days != null ? ` · 中断 ${en.interruption_days} 天` : ''}`;
@@ -556,6 +750,23 @@
       document.getElementById('englishTaskActions').innerHTML = task.actions.map(x => `<li>${x}</li>`).join('');
     }
     document.getElementById('englishSessionStat').textContent = `${en.completed_sessions || 0} / ${en.target_sessions || 60}`;
+    renderRecommendedVideo(tech.recommended_video || en.recommended_video);
+    renderRecentVideos(tech.recent_videos || en.recent_videos);
+    renderDailySpeaking(en.daily_speaking);
+    document.getElementById('technicalEnglishTheme').textContent = `Today Theme · ${tech.today_theme || '当前 AI 主题'}`;
+    document.getElementById('technicalEnglishWhy').textContent = `Why this video · ${tech.why_this_video || '-'}`;
+    const shadowVideo = tech.shadowing_video;
+    const shadowStatus = shadowVideo?.transcript_available ? 'transcript ok' : (shadowVideo?.transcript_status || 'fallback');
+    document.getElementById('technicalEnglishShadowingVideo').textContent = `Shadowing Video · ${shadowVideo?.title || '当前推荐视频'} · ${shadowStatus}`;
+    const shadowMode = shadowVideo?.transcript_available
+      ? 'Shadowing Mode · 可直接使用 transcript 驱动句子'
+      : (shadowVideo?.transcript_status === 'ip_blocked'
+          ? 'Shadowing Mode · 当前环境被 YouTube transcript API 限制；请在浏览器打开视频 + 英文字幕 / Language Reactor 做跟读'
+          : 'Shadowing Mode · 在浏览器里打开视频 + 字幕 / Language Reactor');
+    document.getElementById('technicalEnglishShadowingMode').textContent = shadowMode;
+    document.getElementById('technicalEnglishShadow').textContent = `Shadowing · ${tech.one_sentence_to_shadow || '-'}`;
+    document.getElementById('technicalEnglishOutput').textContent = `Output · ${tech.next_output_prompt || '-'}`;
+    renderTechnicalEnglishSteps(tech.training_steps);
 
     const ai = state.ai || {};
     document.getElementById('aiTaskMeta').textContent = 'AI · 当前阶段';

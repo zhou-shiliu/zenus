@@ -3,7 +3,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from learning_lab_server import LearningStateBuilder, LearningLogWriter
+from learning_lab_server import (
+    LearningStateBuilder,
+    LearningLogWriter,
+    choose_shadowing_sentence,
+    choose_shadowing_video,
+    extract_youtube_id,
+    transcript_fetch_status,
+)
 
 
 class LearningLabServerTest(unittest.TestCase):
@@ -42,7 +49,15 @@ class LearningLabServerTest(unittest.TestCase):
 
 ## Day 3（2026-04-22）
 
-**视频**: sample
+**视频**: [What happens when you type a URL](https://www.youtube.com/watch?v=AlkDbnbv7dk) — ByteByteGo
+""", encoding="utf-8")
+        (self.en / "90-day-plan.md").write_text("""# 90-Day English Learning Plan for Programmers
+
+|| Day | 任务 | 视频 |
+||-----|------|------|
+|| 2 | 听力 Fireship；跟读1句 | [How AI Models Are Trained](https://www.youtube.com/watch?v=OBebQ4tLXIM) |
+|| 3 | 听力 ByteByteGo；记录3个生词 | [What happens when you type a URL](https://www.youtube.com/watch?v=AlkDbnbv7dk) |
+|| 4 | 听力 Fireship；写作：描述今天的工作 | [Neural Networks Explained](https://www.youtube.com/watch?v=oJ7uOj2LRso) |
 """, encoding="utf-8")
 
     def tearDown(self):
@@ -50,12 +65,32 @@ class LearningLabServerTest(unittest.TestCase):
 
     def test_build_state_reads_current_learning_progress(self):
         builder = LearningStateBuilder(self.ai, self.en, self.state)
-        state = builder.build(today="2026-04-29")
+        state = builder.build(today="2026-04-30")
 
         self.assertEqual(state["english"]["completed_sessions"], 1)
         self.assertEqual(state["english"]["last_log_date"], "2026-04-22")
-        self.assertEqual(state["english"]["interruption_days"], 7)
+        self.assertEqual(state["english"]["interruption_days"], 8)
         self.assertEqual(state["english"]["current_task"]["kind"], "recovery")
+        self.assertEqual(state["english"]["recommended_video"]["strategy"], "recovery_last_video")
+        self.assertEqual(state["english"]["recommended_video"]["task_label"], "Recovery Video")
+        self.assertEqual(state["english"]["recommended_video"]["title"], "What happens when you type a URL")
+        self.assertEqual(state["english"]["recommended_video"]["next_up"]["title"], "Neural Networks Explained")
+        self.assertEqual(state["english"]["recommended_video"]["next_up"]["label"], "Next Video")
+        self.assertEqual(state["english"]["recent_videos"][0]["source"], "ByteByteGo")
+        self.assertEqual(state["english"]["technical_english"]["today_theme"], state["ai"]["current_stage"])
+        self.assertEqual(state["english"]["technical_english"]["recommended_video"]["strategy"], "recovery_last_video")
+        self.assertEqual(state["english"]["technical_english"]["shadowing_video"]["title"], "What happens when you type a URL")
+        self.assertFalse(state["english"]["technical_english"]["shadowing_video"]["transcript_available"])
+        self.assertIn(state["english"]["technical_english"]["shadowing_video"]["transcript_status"], {"ip_blocked", "no_transcript", "error", "dependency_missing", "empty"})
+        self.assertIn("多元线性回归", state["english"]["technical_english"]["one_sentence_to_shadow"])
+        self.assertIn("What happens when you type a URL", state["english"]["technical_english"]["next_output_prompt"])
+        self.assertIn("恢复期优先复用上次视频", state["english"]["technical_english"]["why_this_video"])
+        self.assertFalse(state["english"]["technical_english"]["transcript_used"])
+        self.assertEqual(len(state["english"]["technical_english"]["training_steps"]), 3)
+        self.assertEqual(state["english"]["technical_english"]["training_steps"][0]["label"], "Warm-up")
+        self.assertEqual(state["english"]["technical_english"]["training_steps"][1]["label"], "Shadowing")
+        self.assertEqual(state["english"]["technical_english"]["training_steps"][2]["label"], "Output")
+        self.assertEqual(state["english"]["daily_speaking"]["title"], "低压恢复开口")
         self.assertIn("多元线性回归", state["ai"]["current_stage"])
 
     def test_write_english_feedback_appends_log_and_updates_state_file(self):
@@ -81,6 +116,27 @@ class LearningLabServerTest(unittest.TestCase):
         saved = json.loads((self.state / "learning-state.json").read_text(encoding="utf-8"))
         self.assertEqual(saved["english"]["completed_sessions"], 2)
         self.assertEqual(result["written_to"], [str(self.en / "daily-log.md")])
+
+    def test_extract_youtube_id_and_shadow_fallback(self):
+        self.assertEqual(extract_youtube_id("https://www.youtube.com/watch?v=AlkDbnbv7dk"), "AlkDbnbv7dk")
+        self.assertEqual(extract_youtube_id("https://youtu.be/oJ7uOj2LRso"), "oJ7uOj2LRso")
+        fallback = "Fallback shadow sentence."
+        self.assertEqual(choose_shadowing_sentence([], fallback), fallback)
+        self.assertEqual(
+            choose_shadowing_sentence([
+                "too short",
+                "This is a transcript line long enough to use as a shadowing sentence for practice.",
+            ], fallback),
+            "This is a transcript line long enough to use as a shadowing sentence for practice.",
+        )
+        picked = choose_shadowing_video(
+            {"title": "Primary", "url": "https://www.youtube.com/watch?v=AlkDbnbv7dk"},
+            {"title": "Next", "url": "https://www.youtube.com/watch?v=oJ7uOj2LRso"},
+        )
+        self.assertIsNotNone(picked)
+        self.assertIn("title", picked)
+        self.assertIn("transcript_available", picked)
+        self.assertIn(transcript_fetch_status("https://www.youtube.com/watch?v=AlkDbnbv7dk"), {"ok", "ip_blocked", "no_transcript", "error", "dependency_missing", "empty"})
 
 
 if __name__ == "__main__":
